@@ -1,10 +1,6 @@
 .research-cover {
-  --substage: #b54d44;
-  --execution: #416e97;
-}
-:root[data-mode="dark"] .research-cover {
-  --substage: #e68d81;
-  --execution: #90b7d8;
+  --substage: var(--c1);
+  --execution: var(--c2);
 }
 .research-cover .logo span {color:inherit}
 .research-cover .wrap {max-width:1192px}
@@ -61,13 +57,23 @@
   padding:0 24px 14px;
 }
 .cover-signature h1 {
+  position:relative;
+  isolation:isolate;
   width:fit-content;
   font:500 clamp(5rem,8.7vw,8.25rem)/1 var(--serif);
   letter-spacing:-.065em;
   color:#fffaf2;
-  text-shadow:0 2px 12px #10181366;
+  text-shadow:0 1px 3px #101813cc,0 2px 12px #10181366;
 }
-.cover-signature h1 span {font-style:italic}
+.cover-signature h1::before {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:-.09em -.22em -.05em;
+  background:radial-gradient(ellipse at center,rgba(13,19,20,.8) 8%,rgba(13,19,20,.56) 50%,transparent 77%);
+  pointer-events:none;
+}
+.cover-signature .cover-suffix {font-style:italic}
 .paper-details {
   display:grid;
   grid-template-columns: minmax(0,.87fr) minmax(0,1.13fr);
