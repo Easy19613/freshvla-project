@@ -1,6 +1,6 @@
 .research-cover {
-  --substage: var(--c1);
-  --execution: var(--c2);
+  --substage: linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c4),var(--c5));
+  --execution: linear-gradient(90deg,var(--c2),var(--c3),var(--c4),var(--c5),var(--c1));
 }
 .research-cover .logo span {color:inherit}
 .research-cover .wrap {max-width:1192px}
@@ -117,7 +117,7 @@
 .streams div {display:grid;grid-template-columns:141px minmax(0,1fr);gap:12px;align-items:baseline}
 .streams dt {font-size:.9rem;font-weight:650;white-space:nowrap}
 .streams dd {margin:0;color:var(--soft);font-size:.87rem;line-height:1.5}
-.streams i {display:inline-block;width:8px;height:8px;margin:0 7px 1px 0}
+.streams i {display:inline-block;width:17px;height:7px;margin:0 7px 1px 0;border-radius:2px}
 .substage-swatch,.substage-bar {background:var(--substage)}
 .execution-swatch,.execution-bar {background:var(--execution)}
 .probe {
@@ -136,12 +136,16 @@
 .probe-measure {display:grid;grid-template-columns:67px 1fr 4.8ch;align-items:center;gap:10px;padding:2px 0}
 .stream-label {font-size:.78rem;color:var(--soft)}
 .bar-track {height:8px;background:var(--band);border-radius:1px}
-.bar-track i {display:block;height:100%;min-width:1px;border-radius:inherit}
+.bar-track i {display:block;height:100%;min-width:1px;border-radius:inherit;background-size:max(32px,100%) 100%;background-repeat:no-repeat}
 .probe-value {font:400 .78rem var(--mono);text-align:right}
 .probe figcaption {margin-top:15px;padding-top:11px;border-top:1px solid var(--line);text-align:left;color:var(--muted);font-size:.82rem;line-height:1.55}
 .research-cover #abstract {background:var(--paper)}
 .research-cover #method {background:var(--band)}
 .research-cover .robot-section {padding-block:clamp(3.5rem,8vw,6rem)}
+@media screen and (prefers-reduced-motion:no-preference) {
+  [data-scroll-fade] {opacity:var(--scroll-opacity,1)}
+  [data-scroll-fade]:focus-visible,[data-scroll-fade]:has(:focus-visible) {opacity:1}
+}
 @media(min-width:769px) and (max-width:920px) {
   .research-cover .nav-links a {padding-inline:5px;font-size:.82rem}
   .paper-details {grid-template-columns:.9fr 1.1fr;gap:22px}
