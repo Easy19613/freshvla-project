@@ -8,47 +8,62 @@
     '.callout', '.rollouts', '.resources > article', '.citation'
   ].join(','))];
   let frame = 0;
+  let idleTimer = 0;
+  let previousY = window.scrollY;
 
-  function paint() {
-    frame = 0;
+  function update(atRest) {
     const top = nav.getBoundingClientRect().bottom;
     const bottom = document.documentElement.clientHeight;
-    const fadeDistance = Math.min(110, Math.max(56, (bottom - top) * 0.13));
-    const values = blocks.map(block => {
-      const rect = block.getBoundingClientRect();
-      const distance = Math.min(bottom - rect.top, rect.bottom - top);
-      const fraction = Math.min(1, Math.max(0, distance / fadeDistance));
-      return (fraction * fraction * (3 - 2 * fraction)).toFixed(3);
-    });
-    blocks.forEach((block, i) => {
-      if (block.style.getPropertyValue('--scroll-opacity') !== values[i]) {
-        block.style.setProperty('--scroll-opacity', values[i]);
-      }
+    const height = bottom - top;
+    const direction = Math.sign(window.scrollY - previousY);
+    previousY = window.scrollY;
+    const bounds = blocks.map(block => block.getBoundingClientRect());
+
+    blocks.forEach((block, index) => {
+      const rect = bounds[index];
+      const upper = rect.bottom - top;
+      const lower = bottom - rect.top;
+      const depth = Math.min(upper, lower);
+      const edge = upper < lower ? 'above' : 'below';
+      const leaving = (edge === 'above' && direction > 0) || (edge === 'below' && direction < 0);
+      const exitDepth = Math.min(height * .30, rect.height * .5 + height * .10);
+      const enterDepth = atRest ? Math.min(64, rect.height * .33) : height * .22;
+      let state = block.dataset.scrollFade;
+      if (depth <= 0 || (leaving && depth < exitDepth && !atRest)) state = edge;
+      else if (depth >= enterDepth) state = 'visible';
+      else if (!state) state = edge;
+      if (block.dataset.scrollFade !== state) block.dataset.scrollFade = state;
     });
   }
 
-  function schedule() {
-    if (!frame && preference.matches) frame = requestAnimationFrame(paint);
+  function settle() {
+    if (preference.matches) update(true);
   }
 
-  const sizes = typeof ResizeObserver === 'function' ? new ResizeObserver(schedule) : null;
+  function onScroll() {
+    if (!frame) frame = requestAnimationFrame(() => {
+      frame = 0;
+      update(false);
+    });
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(settle, 180);
+  }
+
+  const sizes = typeof ResizeObserver === 'function' ? new ResizeObserver(settle) : null;
   function applyPreference() {
     if (preference.matches) {
-      blocks.forEach(block => { block.dataset.scrollFade = ''; });
-      paint();
-      window.addEventListener('scroll', schedule, {passive:true});
-      window.addEventListener('resize', schedule);
+      settle();
+      window.addEventListener('scroll', onScroll, {passive:true});
+      window.addEventListener('resize', settle);
       sizes?.observe(main);
     } else {
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', settle);
       sizes?.disconnect();
       cancelAnimationFrame(frame);
+      clearTimeout(idleTimer);
       frame = 0;
-      blocks.forEach(block => {
-        delete block.dataset.scrollFade;
-        block.style.removeProperty('--scroll-opacity');
-      });
+      blocks.forEach(block => { delete block.dataset.scrollFade; });
     }
   }
   preference.addEventListener('change', applyPreference);
