@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FreshVLA learns task progress and fine-grained robot movements from action-free videos using frequency-regularized hierarchical latent actions.">
+  <title>FreshVLA · Frequency-Regularized Time Scale Hierarchical Latent Actions</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+  <script>
+    if (new URLSearchParams(location.search).get('palette') === 'mint') {
+      document.documentElement.dataset.palette = 'mint';
+    }
+  </script>
+  <link rel="stylesheet" href="assets/site.css">
+  <script defer src="assets/site.js"></script>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <svg xmlns="http://www.w3.org/2000/svg" class="symbols" aria-hidden="true">
+    <symbol id="i-paper" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6m-6 4h6"/></symbol>
+    <symbol id="i-results" viewBox="0 0 24 24"><path d="M4 4v16h16M8 16v-4m5 4V6m5 10V9"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></symbol>
+    <symbol id="i-cite" viewBox="0 0 24 24"><path d="M9 4H7c-2 0-2 2-2 4s-1 4-3 4c2 0 3 2 3 4s0 4 2 4h2m6-16h2c2 0 2 2 2 4s1 4 3 4c-2 0-3 2-3 4s0 4-2 4h-2"/></symbol>
+    <symbol id="i-code" viewBox="0 0 16 16"><path fill="currentColor" stroke="none" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.38 7.38 0 0 1 8 3.86c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.1A8.8 8.8 0 0 1 9.9 3.5a8.7 8.7 0 1 0 10.6 10.6Z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+    <symbol id="i-zoom" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V4H4v12h4"/></symbol>
+  </svg>
+  <nav class="nav" aria-label="Main navigation">
+    <div class="wrap nav-inner">
+      <a class="logo" href="#top" aria-label="FreshVLA home"><span class="c1">F</span><span class="c2">r</span><span class="c3">e</span><span class="c4">s</span><span class="c5">h</span>VLA</a>
+      <div class="nav-links" id="nav-links">
+        <a href="#abstract">Abstract</a><a href="#method">Method</a><a href="#results">Results</a><a href="#real-robot">Real robot</a><a href="#resources">Resources</a><a href="#bibtex">BibTeX</a>
+      </div>
+      <div class="nav-tools">
+        <a class="icon-button source" href="https://github.com/Easy19613/freshvla-project" aria-label="Project page source on GitHub" title="Project page source on GitHub"><svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg></a>
+        <button class="icon-button js-only" type="button" id="theme" aria-label="Dark mode" aria-pressed="false" title="Dark mode"><svg class="icon" aria-hidden="true"><use href="#i-moon"></use></svg></button>
+        <button class="icon-button menu js-only" type="button" id="menu" aria-label="Navigation menu" aria-expanded="false" aria-controls="nav-links"><svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+      </div>
+    </div>
+  </nav>
+  <main id="main">
+    <header class="hero">
+      <div class="wrap">
+        <p class="venue">Preprint</p>
+        <h1 class="hero-mark" aria-label="FreshVLA"><span class="c1">F</span><span class="c2">r</span><span class="c3">e</span><span class="c4">s</span><span class="c5">h</span>VLA</h1>
+        <p class="paper-title"><span class="expand"><b class="c1">F</b>requency-<b class="c2">R</b>egularized Tim<b class="c3">e</b> <b class="c4">S</b>cale <b class="c5">H</b>ierarchical</span><span class="title-rest">Latent Actions for Vision-Language-Action Models</span></p>
+        <p class="authors">
+          <span>Jiaming Liang<sup>1,2,*</sup></span>, <span>Yifeng Zhan<sup>1,*</sup></span>, <span>Rongyi He<sup>1,*</sup></span>, <span>Mu Li<sup>2,3,*</sup></span>, <span>Jiaqi Fan<sup>1</sup></span>,<br class="desktop-break">
+          <span>Zhiyuan Zhang<sup>1</sup></span>, <span>Qiwei Liang<sup>1</sup></span>, <span>Zhengjie Zhang<sup>1</sup></span>, <span>Boyang Cai<sup>1</sup></span>,<br class="desktop-break">
+          <span>Ningyuan Zhang<sup>2,†</sup></span>, <span>Xingjian Jing<sup>4</sup></span>, <span>Qiang Nie<sup>1,‡</sup></span>
+        </p>
+        <div class="affiliations"><span><sup>1</sup>The Hong Kong University of Science and Technology (Guangzhou)</span><span><sup>2</sup>XPENG Robotics</span><br class="desktop-break"><span><sup>3</sup>Shanghai Institute of Intelligent Science and Technology, Tongji University</span><span><sup>4</sup>City University of Hong Kong</span></div>
+        <p class="roles"><span>* Equal contribution</span><span>† Project lead</span><span>‡ Corresponding author</span></p>
+        <div class="actions"><a class="btn primary" href="assets/FreshVLA.pdf"><svg class="icon" aria-hidden="true"><use href="#i-paper"></use></svg> Paper</a><a class="btn" href="#real-robot"><svg class="icon" aria-hidden="true"><use href="#i-film"></use></svg> Real robot</a><a class="btn" href="#results"><svg class="icon" aria-hidden="true"><use href="#i-results"></use></svg> Results</a><a class="btn" href="#bibtex"><svg class="icon" aria-hidden="true"><use href="#i-cite"></use></svg> BibTeX</a></div>
+        <p class="tldr"><strong>TL;DR</strong> FreshVLA learns task progress and fine movements from action-free video, reaching <strong>98.0%</strong> success on LIBERO-Long.</p>
+      </div>
+    </header>
+    <section class="band robot-section" id="real-robot" aria-labelledby="robot-title">
+      <div class="wrap">
+        <div class="section-head"><p class="eyebrow">Real robot</p><h2 id="robot-title">FreshVLA on the tabletop</h2><p>Four language-conditioned tasks on a 6-DoF Flexiv arm.</p></div>
+        <div class="tabs rollouts" data-tabs>
+          <div class="tablist steps" aria-label="Robot task"><button type="button" data-tab="task-bowls"><b aria-hidden="true">01</b>Organize Bowls</button>
+            <button type="button" data-tab="task-pot"><b aria-hidden="true">02</b>Open Pot</button>
+            <button type="button" data-tab="task-dinner"><b aria-hidden="true">03</b>Warmup Dinner</button>
+            <button type="button" data-tab="task-toys"><b aria-hidden="true">04</b>Collect Toys</button></div>
+          <div class="rollout-card" id="task-bowls">
+            <div class="rollout-head"><h3>Stack the bowls in the drawer, then close it.</h3><p><strong>86.7%</strong>Task success</p></div>
+            <a class="rollout-image" href="assets/figures/rollout-bowls.webp" data-zoom><img src="assets/figures/rollout-bowls.webp" width="1708" height="311" alt="Four successive camera frames from the Flexiv Organize Bowls task. Stack the bowls in the drawer, then close it."></a>
+            <div class="frame-labels" aria-hidden="true"><span>Frame 01</span><span>02</span><span>03</span><span>04</span></div>
+          </div>
+          <div class="rollout-card" id="task-pot">
+            <div class="rollout-head"><h3>Lift the lid off the pot.</h3><p><strong>96.7%</strong>Task success</p></div>
+            <a class="rollout-image" href="assets/figures/rollout-pot.webp" data-zoom><img src="assets/figures/rollout-pot.webp" width="1708" height="311" alt="Four successive camera frames from the Flexiv Open Pot task. Lift the lid off the pot."></a>
+            <div class="frame-labels" aria-hidden="true"><span>Frame 01</span><span>02</span><span>03</span><span>04</span></div>
+          </div>
+          <div class="rollout-card" id="task-dinner">
+            <div class="rollout-head"><h3>Place the meat on the grill, then ring the bell.</h3><p><strong>80.0%</strong>Task success</p></div>
+            <a class="rollout-image" href="assets/figures/rollout-dinner.webp" data-zoom><img src="assets/figures/rollout-dinner.webp" width="1708" height="311" alt="Four successive camera frames from the Flexiv Warmup Dinner task. Place the meat on the grill, then ring the bell."></a>
+            <div class="frame-labels" aria-hidden="true"><span>Frame 01</span><span>02</span><span>03</span><span>04</span></div>
+          </div>
+          <div class="rollout-card" id="task-toys">
+            <div class="rollout-head"><h3>Place the doll in the basket, then gather the blocks inside the black line.</h3><p><strong>73.3%</strong>Task success</p></div>
+            <a class="rollout-image" href="assets/figures/rollout-toys.webp" data-zoom><img src="assets/figures/rollout-toys.webp" width="1708" height="311" alt="Four successive camera frames from the Flexiv Collect Toys task. Place the doll in the basket, then gather the blocks inside the black line."></a>
+            <div class="frame-labels" aria-hidden="true"><span>Frame 01</span><span>02</span><span>03</span><span>04</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="stats-section" aria-label="Benchmark highlights">
+      <div class="wrap stats">
+        <div><strong>98.2<span>%</span></strong><p>LIBERO average success</p></div>
+        <div><strong>80.4<span>%</span></strong><p>Zero-shot LIBERO-PLUS</p></div>
+        <div><strong>4.52<span> / 5</span></strong><p>CALVIN mean sequence length</p></div>
+        <div><strong>84.2<span>%</span></strong><p>Real-robot average success</p></div>
+      </div>
+    </section>
+    <section class="band section" id="abstract">
+      <div class="wrap"><div class="section-head"><p class="eyebrow">Abstract</p><h2>Learning actions from video</h2></div>
+        <div class="prose">
+          <p>In a video of a robot stacking bowls, the drawer and table appear in every frame. The brief moment when the gripper touches a bowl tells us more about the action. Learning from video requires identifying those changes and connecting them over time.</p>
+          <p>FreshVLA uses a temporal high-pass prior to direct attention toward regions that change during manipulation. It learns continuous latent actions at two timescales. One tracks progress through a task, while the other captures local changes during execution. A frozen encoder then supplies latent targets for a flow-matching policy that learns to generate robot actions.</p>
+          <p>With 2.5 billion parameters, FreshVLA achieves 98.2% average success on LIBERO and 80.4% on zero-shot LIBERO-PLUS. Across four tasks on a physical robot, it improves average success by 7.5 percentage points over π<sub>0.5</sub>.</p>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="method">
+      <div class="wrap"><div class="section-head"><p class="eyebrow">Method</p><h2>From visual changes to robot actions</h2><p>FreshVLA first learns how a scene changes, then uses those representations to train a language-conditioned policy.</p></div>
+        <figure class="figure"><a class="figure-link" href="assets/figures/overview.webp" data-zoom><img src="assets/figures/overview.webp" loading="lazy" width="2200" height="1037" alt="FreshVLA overview, showing a high-pass visual prior, hierarchical latent actions, and joint flow matching for robot control."><span class="zoom-icon"><svg class="icon" aria-hidden="true"><use href="#i-zoom"></use></svg></span></a><figcaption>Visual transitions learned from video provide training targets for the robot policy.</figcaption></figure>
+        <div class="pipeline">
+          <article><span class="number">1</span><h3>Find the motion</h3><p>DynaAdapter learns which visual patches change as the gripper approaches and moves an object.</p><span class="footnote">High-pass visual prior</span></article>
+          <article><span class="number">2</span><h3>Separate the timescales</h3><p>A substage latent tracks slower progress. An execution latent describes the local residual motion.</p><span class="footnote">Frequency regularization</span></article>
+          <article><span class="number">3</span><h3>Learn the controls</h3><p>A frozen encoder supplies targets while a flow-matching policy jointly denoises latent actions and robot actions.</p><span class="footnote">Joint flow matching</span></article>
+        </div>
+      </div>
+    </section>
+    <section class="band section" id="results">
+      <div class="wrap"><div class="section-head"><p class="eyebrow">Results</p><h2>Manipulation across benchmarks</h2><p>Compare task success in simulation, under seven kinds of distribution shift, and on the physical robot.</p></div>
+        <div class="tabs results-tabs" data-tabs>
+  <div class="tablist" aria-label="Benchmark">
+    <button type="button" data-tab="sim-results">Simulation</button>
+    <button type="button" data-tab="plus-results">LIBERO-PLUS</button>
+    <button type="button" data-tab="robot-results">Real robot</button>
+  </div>
+  <div class="tab-panel" id="sim-results">
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Simulation results">
+      <table>
+        <caption>LIBERO reports success rates (%). CALVIN reports the mean number of consecutive subtasks completed out of five.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Method</th>
+            <th scope="col">Spatial</th>
+            <th scope="col">Object</th>
+            <th scope="col">Goal</th>
+            <th scope="col">Long</th>
+            <th scope="col">LIBERO avg.</th>
+            <th scope="col">CALVIN len.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">OpenVLA-OFT</th>
+            <td>96.2</td><td>98.3</td><td>96.2</td><td>90.7</td><td>95.3</td><td>4.10</td>
+          </tr>
+          <tr>
+            <th scope="row">π<sub>0.5</sub></th>
+            <td>98.8</td><td>98.2</td><td>98.0</td><td>92.4</td><td>96.9</td><td>4.26</td>
+          </tr>
+          <tr>
+            <th scope="row">GR00T-N1.6</th>
+            <td>97.7</td><td>98.5</td><td>97.5</td><td>94.4</td><td>97.0</td><td>4.24</td>
+          </tr>
+          <tr class="ours">
+            <th scope="row">FreshVLA</th>
+            <td>98.7</td><td>99.7</td><td>96.3</td><td>98.0</td><td>98.2</td><td>4.52</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="tab-panel" id="plus-results">
+    <div class="table-scroll" tabindex="0" role="region" aria-label="LIBERO-PLUS results">
+      <table>
+        <caption>Zero-shot success rates (%) across seven perturbation categories.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Method</th>
+            <th scope="col">Camera</th>
+            <th scope="col">Robot</th>
+            <th scope="col">Language</th>
+            <th scope="col">Light</th>
+            <th scope="col">Background</th>
+            <th scope="col">Noise</th>
+            <th scope="col">Layout</th>
+            <th scope="col">Avg.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">OpenVLA-OFT</th>
+            <td>56.4</td><td>31.9</td><td>79.5</td><td>88.7</td><td>93.3</td><td>75.8</td><td>74.2</td><td>71.4</td>
+          </tr>
+          <tr>
+            <th scope="row">π<sub>0.5</sub></th>
+            <td>53.0</td><td>50.3</td><td>65.7</td><td>83.1</td><td>77.3</td><td>53.2</td><td>72.7</td><td>65.0</td>
+          </tr>
+          <tr class="ours">
+            <th scope="row">FreshVLA</th>
+            <td>60.0</td><td>58.9</td><td>88.9</td><td>97.0</td><td>97.1</td><td>84.4</td><td>76.3</td><td>80.4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="tab-panel" id="robot-results">
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Real robot results">
+      <table>
+        <caption>Task success rates (%) on the Flexiv tabletop setup.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Method</th>
+            <th scope="col">Open Pot</th>
+            <th scope="col">Warmup Dinner</th>
+            <th scope="col">Organize Bowls</th>
+            <th scope="col">Collect Toys</th>
+            <th scope="col">Avg.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">π<sub>0</sub></th>
+            <td>96.7</td><td>63.3</td><td>53.3</td><td>66.7</td><td>70.0</td>
+          </tr>
+          <tr>
+            <th scope="row">QwenGR00T</th>
+            <td>93.3</td><td>60.0</td><td>66.7</td><td>60.0</td><td>70.0</td>
+          </tr>
+          <tr>
+            <th scope="row">ACoT-VLA</th>
+            <td>96.7</td><td>70.0</td><td>56.7</td><td>66.7</td><td>72.5</td>
+          </tr>
+          <tr>
+            <th scope="row">π<sub>0.5</sub></th>
+            <td>96.7</td><td>66.7</td><td>80.0</td><td>63.3</td><td>76.7</td>
+          </tr>
+          <tr class="ours">
+            <th scope="row">FreshVLA</th>
+            <td>96.7</td><td>80.0</td><td>86.7</td><td>73.3</td><td>84.2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+        <p class="callout">On LIBERO-Long, FreshVLA reaches 98.0% success, 3.6 percentage points above GR00T-N1.6.</p>
+      </div>
+    </section>
+    <section class="section" id="analysis">
+      <div class="wrap"><div class="section-head"><p class="eyebrow">Qualitative analysis</p><h2>Where the model looks</h2><p>Attention maps from successive frames show how each encoder follows the interaction between the gripper and the object.</p></div>
+        <figure class="figure"><a class="figure-link" href="assets/figures/attention.webp" data-zoom><img width="2050" height="453" src="assets/figures/attention.webp" loading="lazy" alt="Attention maps from four encoders over the same tabletop manipulation sequence, with FreshVLA at top left."><span class="zoom-icon"><svg class="icon" aria-hidden="true"><use href="#i-zoom"></use></svg></span></a><figcaption>In the paper’s qualitative comparison, FreshVLA attends more consistently to the gripper–object interaction over time.</figcaption></figure>
+      </div>
+    </section>
+    <section class="band section" id="resources">
+      <div class="wrap"><div class="section-head"><p class="eyebrow">Resources</p><h2>Paper and figures</h2></div>
+        <div class="resources">
+          <article><div class="res-icon"><svg class="icon" aria-hidden="true"><use href="#i-paper"></use></svg></div><h3>Full paper</h3><p>Read the manuscript, benchmark protocols, and supplementary analyses.</p><a class="btn" href="assets/FreshVLA.pdf">Read PDF</a></article>
+          <article><div class="res-icon"><svg class="icon" aria-hidden="true"><use href="#i-results"></use></svg></div><h3>Pretraining architecture</h3><p>Inspect DynaAdapter, the two latent streams, and their training objectives.</p><a class="btn" href="assets/figures/pretraining.webp" data-zoom data-caption="FreshVLA pretraining architecture">View figure</a></article>
+          <article><div class="res-icon"><svg class="icon" aria-hidden="true"><use href="#i-film"></use></svg></div><h3>Robot setup</h3><p>See the Flexiv arm, camera placement, and image sequences from all four tasks.</p><a class="btn" href="assets/figures/flexiv.webp" data-zoom data-caption="Flexiv setup and four tabletop tasks">View setup</a></article>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="bibtex">
+      <div class="wrap"><div class="section-head"><p class="eyebrow">Citation</p><h2>BibTeX</h2></div>
+        <div class="citation"><button type="button" class="copy js-only" id="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"></use></svg> <span>Copy</span></button><pre><code id="citation">@misc{liang2026freshvla,
+  title  = {{FreshVLA}: Frequency-Regularized Time Scale Hierarchical
+            Latent Actions for Vision-Language-Action Models},
+  author = {Liang, Jiaming and Zhan, Yifeng and He, Rongyi and
+            Li, Mu and Fan, Jiaqi and Zhang, Zhiyuan and
+            Liang, Qiwei and Zhang, Zhengjie and Cai, Boyang and
+            Zhang, Ningyuan and Jing, Xingjian and Nie, Qiang},
+  year   = {2026},
+  note   = {Preprint}
+}</code></pre></div><p role="status" class="sr-only" id="copy-status"></p>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap footer-inner"><a class="logo" href="#top" aria-label="FreshVLA home"><span class="c1">F</span><span class="c2">r</span><span class="c3">e</span><span class="c4">s</span><span class="c5">h</span>VLA</a><div><a href="assets/FreshVLA.pdf">Paper</a><a href="#bibtex">BibTeX</a><a href="#top">Back to top</a></div></div></footer>
+  <dialog id="lightbox" aria-label="Enlarged figure"><button type="button" class="lightbox-close" aria-label="Close enlarged figure">×</button><img alt=""></dialog>
+</body>
+</html>
